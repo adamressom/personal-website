@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Subscribe from "@/components/Subscribe";
 
 const socials = [
   { label: "Email me", href: "mailto:adamressom@gmail.com", filled: true },
-  { label: "LinkedIn", href: "https://linkedin.com/in/adamressom", filled: false },
+  { label: "LinkedIn", href: "https://linkedin.com/in/adam-ressom", filled: false },
   { label: "GitHub", href: "https://github.com/adamressom", filled: false },
-  { label: "Twitter / X", href: "https://twitter.com/adamressom", filled: false },
+  { label: "Instagram", href: "https://www.instagram.com/adamressom", filled: false },
 ];
 
 export default function Contact() {
@@ -33,7 +34,7 @@ export default function Contact() {
             </a>
           ))}
         </div>
-        <p className="text-xs text-gray-200 mt-8 tracking-wide">Usually responds within 24 hours</p>
+        <Subscribe />
       </div>
     </main>
   );

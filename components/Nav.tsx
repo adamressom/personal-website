@@ -2,13 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 const links = [
   { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/projects", label: "Projects" },
-  { href: "/resume", label: "Resume" },
   { href: "/contact", label: "Contact" },
   { href: "/blog", label: "Blog" },
 ];
@@ -16,28 +13,37 @@ const links = [
 export default function Nav() {
   const pathname = usePathname();
   const [show, setShow] = useState(true);
-  const [lastY, setLastY] = useState(0);
+  const lastY = useRef(0);
+  const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  function showNav() {
+    setShow(true);
+    if (hideTimer.current) clearTimeout(hideTimer.current);
+    hideTimer.current = setTimeout(() => setShow(false), 3000);
+  }
 
   useEffect(() => {
-    setShow(true);
-    const hideTimer = setTimeout(() => setShow(false), 2000);
-    return () => clearTimeout(hideTimer);
+    showNav();
   }, [pathname]);
 
   useEffect(() => {
+    const container = document.querySelector("main") as HTMLElement | null;
+    const target = container ?? window;
+
     const handleScroll = () => {
-      const currentY = window.scrollY;
-      if (currentY < lastY - 5) {
-        setShow(true);
-      } else if (currentY > lastY + 5) {
+      const currentY = container ? container.scrollTop : window.scrollY;
+      if (currentY < lastY.current - 5) {
+        showNav();
+      } else if (currentY > lastY.current + 5) {
         setShow(false);
+        if (hideTimer.current) clearTimeout(hideTimer.current);
       }
-      setLastY(currentY);
+      lastY.current = currentY;
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastY]);
+    target.addEventListener("scroll", handleScroll, { passive: true });
+    return () => target.removeEventListener("scroll", handleScroll);
+  }, [pathname]);
 
   return (
     <nav

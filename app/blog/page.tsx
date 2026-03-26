@@ -39,7 +39,7 @@ export default function Blog() {
     >
       <div className="w-full max-w-4xl">
         <p className="text-xs tracking-widest text-gray-300 uppercase mb-10">
-          05 — Writing
+          05 — Blogs
         </p>
         <div className="grid grid-cols-3 gap-5">
           {posts.map((post, i) => (

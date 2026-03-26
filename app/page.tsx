@@ -1,65 +1,74 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+
+const phrases = ["Adam Ressom.", "a software engineer.", "a builder."];
 
 export default function Home() {
+  const [displayed, setDisplayed] = useState("");
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [deleting, setDeleting] = useState(false);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    setVisible(true);
+  }, []);
+
+  useEffect(() => {
+    const current = phrases[phraseIndex];
+    let timeout: ReturnType<typeof setTimeout>;
+
+    if (!deleting && displayed.length < current.length) {
+      timeout = setTimeout(() => setDisplayed(current.slice(0, displayed.length + 1)), 75);
+    } else if (!deleting && displayed.length === current.length) {
+      if (phraseIndex === 0) {
+        timeout = setTimeout(() => { setDeleting(true); }, 2000);
+      } else {
+        timeout = setTimeout(() => setDeleting(true), 1400);
+      }
+    } else if (deleting && displayed.length > 0) {
+      timeout = setTimeout(() => setDisplayed(displayed.slice(0, -1)), 38);
+    } else if (deleting && displayed.length === 0) {
+      setDeleting(false);
+      setPhraseIndex((i) => (i + 1) % phrases.length === 0 ? 1 : (i + 1) % phrases.length);
+    }
+
+    return () => clearTimeout(timeout);
+  }, [displayed, deleting, phraseIndex]);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <main
+      className="h-screen w-full flex flex-col justify-center px-16 bg-white"
+      style={{ opacity: visible ? 1 : 0, transition: "opacity 0.8s ease" }}
+    >
+      <p className="text-xs tracking-widest text-gray-400 uppercase mb-6">
+        Software Engineer — Washington, D.C
+      </p>
+
+      <h1 className="text-7xl font-medium tracking-tight text-gray-900 mb-6 leading-none min-h-[1.2em]">
+        {displayed}
+        <span className="border-r-2 border-gray-900 ml-1 animate-pulse">&nbsp;</span>
+      </h1>
+
+      <p className="text-base text-gray-400 max-w-md leading-relaxed mb-8">
+        I build thoughtful, performant software — from clean interfaces to robust backend systems.
+      </p>
+
+      <div className="flex gap-3 flex-wrap">
+        {["Next.js", "TypeScript", "Convex", "React", "Node.js"].map((tag) => (
+          <span
+            key={tag}
+            className="text-xs px-3 py-1 rounded-full border border-gray-200 text-gray-400"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+            {tag}
+          </span>
+        ))}
+      </div>
+
+      <p className="absolute bottom-8 left-16 text-xs text-gray-300 tracking-widest flex items-center gap-3">
+        <span className="w-7 h-px bg-gray-200 inline-block" />
+        Scroll to explore
+      </p>
+    </main>
   );
 }

@@ -22,10 +22,12 @@ export default function Nav() {
     hideTimer.current = setTimeout(() => setShow(false), 3000);
   }
 
+  // Show on page load then hide after 3s
   useEffect(() => {
     showNav();
   }, [pathname]);
 
+  // Show on scroll up, hide on scroll down
   useEffect(() => {
     const container = document.querySelector("main") as HTMLElement | null;
     const target = container ?? window;
@@ -44,6 +46,18 @@ export default function Nav() {
     target.addEventListener("scroll", handleScroll, { passive: true });
     return () => target.removeEventListener("scroll", handleScroll);
   }, [pathname]);
+
+  // Show when mouse is near the top of the screen
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (e.clientY < 60) {
+        showNav();
+      }
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
 
   return (
     <nav

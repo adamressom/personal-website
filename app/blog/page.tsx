@@ -23,12 +23,45 @@ const posts = [
   },
 ];
 
+function WinkFace() {
+  const [winking, setWinking] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setWinking(true);
+      setTimeout(() => setWinking(false), 350);
+    }, 1500);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <svg width="120" height="80" viewBox="0 0 120 80" fill="none" xmlns="http://www.w3.org/2000/svg"
+      style={{ animation: "bob 2s ease-in-out infinite" }}>
+      <style>{`@keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }`}</style>
+      {winking ? (
+        <path d="M28 28 Q35 36 42 28" stroke="#111" strokeWidth="3.5" strokeLinecap="round" fill="none"/>
+      ) : (
+        <ellipse cx="35" cy="28" rx="7" ry="9" fill="#111"/>
+      )}
+      <ellipse cx="85" cy="28" rx="7" ry="9" fill="#111"/>
+      <path d="M28 60 Q60 80 92 60" stroke="#111" strokeWidth="4" strokeLinecap="round" fill="none"/>
+    </svg>
+  );
+}
+
 export default function Blog() {
   const [visible, setVisible] = useState(false);
   const [hovered, setHovered] = useState<number | null>(null);
+  const [showPopup, setShowPopup] = useState(false);
+  const [justSignedUp, setJustSignedUp] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => setVisible(true), 100);
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("subscribed") === "true") {
+      setJustSignedUp(true);
+      setShowPopup(true);
+    }
     return () => clearTimeout(timer);
   }, []);
 
@@ -37,9 +70,37 @@ export default function Blog() {
       className="min-h-screen w-full flex items-center px-16 bg-gray-50"
       style={{ opacity: visible ? 1 : 0, transition: "opacity 0.8s ease" }}
     >
+      {showPopup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
+          <div className="bg-white rounded-3xl p-12 max-w-md w-full mx-4 relative text-center">
+            <button
+              onClick={() => setShowPopup(false)}
+              className="absolute top-5 right-5 text-gray-300 hover:text-gray-600 transition-colors text-lg"
+            >
+              ✕
+            </button>
+            <h3 className="text-2xl font-medium text-gray-900 mb-6">
+              {justSignedUp ? "You're in!" : "Welcome back!"}
+            </h3>
+            <div className="flex justify-center mb-6">
+              <WinkFace />
+            </div>
+            <p className="text-sm text-gray-400 leading-relaxed mb-8">
+              You&apos;ll receive weekly updates on what I&apos;m building, writing, and thinking about. Stay tuned!
+            </p>
+            <button
+              onClick={() => setShowPopup(false)}
+              className="text-xs px-8 py-3 rounded-full bg-black text-white hover:bg-gray-800 transition-colors"
+            >
+              Got it
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="w-full max-w-4xl">
         <p className="text-xs tracking-widest text-gray-300 uppercase mb-10">
-          05 — Blogs
+          Blogs
         </p>
         <div className="grid grid-cols-3 gap-5">
           {posts.map((post, i) => (

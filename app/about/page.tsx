@@ -17,8 +17,7 @@ export default function About() {
     >
       <div className="grid grid-cols-2 gap-24 w-full max-w-5xl">
         <div className="flex flex-col gap-4">
-          <span className="text-8xl font-medium text-gray-100 leading-none tracking-tight">01</span>
-          <span className="text-xs tracking-widest text-gray-300 uppercase">About me</span>
+          <span className="text-8xl font-medium text-gray-100 leading-none tracking-tight">About Me</span>
         </div>
         <div>
           <h2 className="text-3xl font-medium tracking-tight text-gray-900 mb-6">

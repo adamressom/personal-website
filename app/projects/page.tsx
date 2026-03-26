@@ -25,7 +25,7 @@ export default function Projects() {
     >
       <div className="w-full max-w-4xl">
         <p className="text-xs tracking-widest text-gray-600 uppercase mb-8">
-          02 — Selected work
+          Projects
         </p>
         <div className="flex flex-col">
           {projects.map((project, i) => (

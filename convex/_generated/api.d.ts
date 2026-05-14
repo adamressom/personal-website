@@ -9,6 +9,7 @@
  */
 
 import type * as subscribers from "../subscribers.js";
+import type * as workosWebhookEvents from "../workosWebhookEvents.js";
 
 import type {
   ApiFromModules,
@@ -18,6 +19,7 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   subscribers: typeof subscribers;
+  workosWebhookEvents: typeof workosWebhookEvents;
 }>;
 
 /**

@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     clientId: process.env.WORKOS_CLIENT_ID!,
   });
 
-  const response = NextResponse.redirect(new URL("/blog?subscribed=true", request.url));
+  const response = NextResponse.redirect(new URL("/blogs?subscribed=true", request.url));
   
   // httpOnly for security
   response.cookies.set("user_email", user.email, { httpOnly: true, maxAge: 60 * 60 * 24 * 7 });

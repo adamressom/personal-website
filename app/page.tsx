@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { featuredWork } from "@/lib/work";
 
 const projects = [
   ["Personal Website", "Next.js, Convex, WorkOS", "I rebuilt this site as a small personal system."],
@@ -11,30 +12,6 @@ const current = [
   ["studying", "Computer science. Software design. Web systems."],
   ["building", "Apps with auth, data, and clear user flows."],
   ["looking for", "Internship work where I can learn and ship."],
-];
-
-const experience = [
-  [
-    "SEO Tech",
-    "Software Engineering Intern",
-    "Python, Pygame, HTML, CSS",
-    "Feb 2025 to Aug 2025, returning Summer 2026",
-    "Built a desktop game in Python. Tested features with an Agile team.",
-  ],
-  [
-    "Georgetown University",
-    "Data Science Intern",
-    "Python, SQL, Git, AI",
-    "Jun 2023 to Aug 2023",
-    "Cut metabolomics processing time by 50%. Found 2 potential biomarkers.",
-  ],
-  [
-    "OmicsCraft LLC",
-    "AI and Software Engineering Intern",
-    "Java, Git, AI",
-    "Jun 2022 to Aug 2022",
-    "Tested 3 bioinformatics toolkits. Found 2 critical bugs.",
-  ],
 ];
 
 export default function Home() {
@@ -84,28 +61,42 @@ export default function Home() {
       <section className="mx-auto mt-12 max-w-2xl">
         <div className="mb-5 flex items-center justify-between border-b border-[#d4ded2] pb-3">
           <h2 className="mono-font text-[11px] font-semibold uppercase tracking-[0.16em] text-[#386f8f]">
-            technical experience
+            work
           </h2>
-          <Link href="/resume" className="text-xs font-medium text-[#c45f3a]">
+          <a
+            href="/MLT%20Resume.pdf"
+            download
+            className="text-xs font-medium text-[#c45f3a]"
+          >
             resume
-          </Link>
+          </a>
         </div>
         <div className="space-y-3">
-          {experience.map(([company, role, stack, dates, result]) => (
+          {featuredWork.map((item) => (
             <article
-              key={company}
+              key={`${item.organization}-${item.role}`}
               className="rounded-2xl border border-[#d4ded2] bg-[#fbfaf3]/70 p-4"
             >
               <div className="flex flex-wrap items-baseline justify-between gap-2">
-                <h3 className="text-sm font-semibold">{company}</h3>
-                <p className="mono-font text-[10px] text-[#667069]">{dates}</p>
+                <h3 className="text-sm font-semibold">{item.organization}</h3>
+                <p className="mono-font text-[10px] text-[#667069]">{item.dates}</p>
               </div>
-              <p className="mt-2 text-xs font-medium text-[#20221f]">{role}</p>
-              <p className="mono-font mt-2 text-[10px] text-[#386f8f]">{stack}</p>
-              <p className="mt-2 text-xs leading-6 text-[#4f5b53]">{result}</p>
+              <p className="mt-2 text-xs font-medium text-[#20221f]">{item.role}</p>
+              {item.location && (
+                <p className="mono-font mt-2 text-[10px] text-[#386f8f]">
+                  {item.location}
+                </p>
+              )}
+              <p className="mt-2 text-xs leading-6 text-[#4f5b53]">{item.summary}</p>
             </article>
           ))}
         </div>
+        <Link
+          href="/work"
+          className="mt-5 block text-right text-xs font-semibold lowercase text-[#c45f3a]"
+        >
+          all work →
+        </Link>
       </section>
 
       <section className="mx-auto mt-12 max-w-2xl">
@@ -113,7 +104,7 @@ export default function Home() {
           <h2 className="mono-font text-[11px] font-semibold uppercase tracking-[0.16em] text-[#386f8f]">
             current shelf
           </h2>
-          <Link href="/blog" className="text-xs font-medium text-[#c45f3a]">
+          <Link href="/blogs" className="text-xs font-medium text-[#c45f3a]">
             read notes
           </Link>
         </div>

@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 
 const socials = [
-  { label: "Email me", href: "mailto:adamressom@gmail.com", filled: true },
-  { label: "LinkedIn", href: "https://linkedin.com/in/adam-ressom", filled: false },
-  { label: "GitHub", href: "https://github.com/adamressom", filled: false },
-  { label: "Instagram", href: "https://www.instagram.com/adamressom", filled: false },
+  { label: "email", href: "mailto:aressom@umich.edu" },
+  { label: "linkedin", href: "https://linkedin.com/in/adam-ressom" },
+  { label: "github", href: "https://github.com/adamressom" },
+  { label: "instagram", href: "https://www.instagram.com/adamressom" },
 ];
 
 export default function Contact() {
@@ -14,27 +14,77 @@ export default function Contact() {
   const [isSignedIn, setIsSignedIn] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setVisible(true), 100);
-    const cookies = document.cookie.split(";").map((c) => c.trim());
-    const signedIn = cookies.some((c) => c.startsWith("is_signed_in="));
-    setIsSignedIn(signedIn);
+    const timer = setTimeout(() => {
+      const cookies = document.cookie.split(";").map((c) => c.trim());
+      const signedIn = cookies.some((c) => c.startsWith("is_signed_in="));
+      setIsSignedIn(signedIn);
+      setVisible(true);
+    }, 100);
     return () => clearTimeout(timer);
   }, []);
 
   return (
-    <main className="min-h-screen w-full flex items-center justify-center px-16 bg-white" style={{ opacity: visible ? 1 : 0, transition: "opacity 0.8s ease" }}>
-      <div className="text-center max-w-lg">
-        <h2 className="text-5xl font-medium tracking-tight text-gray-900 mb-4 leading-tight">Let&apos;s build something together.</h2>
-        <p className="text-sm text-gray-400 leading-relaxed mb-10">Open to new opportunities, collaborations, and good conversations.</p>
-        <div className="flex gap-3 justify-center flex-wrap mb-10">
-          {socials.map((s) => (<a key={s.label} href={s.href} rel="noreferrer" className={s.filled ? "text-xs px-5 py-2.5 rounded-full bg-black text-white hover:bg-gray-800 transition-colors" : "text-xs px-5 py-2.5 rounded-full border border-gray-200 text-gray-600 hover:border-gray-400 transition-colors"}>{s.label}</a>))}
+    <main
+      className="min-h-screen bg-[#eef4ec] px-4 pb-20 pt-16 text-[#20221f]"
+      style={{ opacity: visible ? 1 : 0, transition: "opacity 0.6s ease" }}
+    >
+      <section className="mx-auto max-w-2xl text-center">
+        <p className="mono-font mx-auto w-fit rounded-full border border-[#d4ded2] bg-[#fbfaf3] px-3 py-1 text-[10px] lowercase tracking-[0.18em] text-[#386f8f]">
+          open channel
+        </p>
+        <h1 className="mt-8 text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">
+          Contact
+        </h1>
+        <p className="mx-auto mt-4 max-w-lg text-sm leading-7 text-[#4f5b53]">
+          Send internship leads, project ideas, or direct questions. Short
+          messages work best.
+        </p>
+        <div className="mx-auto mt-7 flex w-fit flex-wrap justify-center gap-2 text-[12px] font-medium lowercase">
+          {socials.map((s) => (
+            <a
+              key={s.label}
+              href={s.href}
+              rel="noreferrer"
+              className="rounded-full bg-[#fbfaf3] px-3 py-1.5 text-[#20221f] ring-1 ring-[#d4ded2] hover:text-[#c45f3a]"
+            >
+              {s.label}
+            </a>
+          ))}
         </div>
-        <div className="border-t border-gray-100 pt-8">
-          <p className="text-xs tracking-widest text-gray-300 uppercase mb-3">Stay in the loop</p>
-          {isSignedIn ? (<div><p className="text-sm text-gray-400 mb-2">You&apos;re already subscribed!</p><p className="text-xs text-gray-300">Check your inbox every week.</p></div>) : (<div><p className="text-sm text-gray-400 mb-6">Get weekly updates on what I&apos;m building and writing.</p><a href="/auth" className="inline-block text-sm px-8 py-3 rounded-full bg-black text-white hover:bg-gray-800 transition-colors">Sign up</a></div>)}
+      </section>
+
+      <section className="mx-auto mt-12 max-w-2xl rounded-[28px] border border-[#d4ded2] bg-[#fbfaf3] p-5 text-center shadow-[0_24px_80px_rgba(57,70,61,0.08)]">
+        <div className="mx-auto max-w-md">
+          {isSignedIn ? (
+            <div>
+              <h2 className="text-base font-semibold">
+                You&apos;re already in.
+              </h2>
+              <p className="mt-3 text-xs leading-6 text-[#4f5b53]">
+                You will get short notes on projects, tools, and lessons.
+              </p>
+            </div>
+          ) : (
+            <div>
+              <p className="mono-font text-[10px] uppercase tracking-[0.16em] text-[#c45f3a]">
+                tiny newsletter
+              </p>
+              <h2 className="mt-3 text-base font-semibold">
+                Get the notes.
+              </h2>
+              <p className="mt-3 text-xs leading-6 text-[#4f5b53]">
+                Get short updates on what I build, read, and learn.
+              </p>
+              <a
+                href="/auth"
+                className="mt-5 inline-block rounded-full bg-[#20221f] px-4 py-2 text-xs font-semibold lowercase text-[#fbfaf3] hover:bg-[#386f8f]"
+              >
+                sign up
+              </a>
+            </div>
+          )}
         </div>
-        <p className="text-xs text-gray-200 mt-6 tracking-wide">Usually responds within 24 hours</p>
-      </div>
+      </section>
     </main>
   );
 }

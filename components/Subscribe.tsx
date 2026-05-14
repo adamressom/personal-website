@@ -25,13 +25,13 @@ export default function Subscribe() {
   return (
     <div className="mt-12 pt-8 border-t border-gray-100">
       <p className="text-xs tracking-widest text-gray-300 uppercase mb-4">
-        Stay in the loop
+        Get updates
       </p>
       <p className="text-sm text-gray-400 mb-5">
-        Get weekly updates on what I&apos;m building and writing.
+        Get short notes on projects, tools, and lessons.
       </p>
       {status === "success" ? (
-        <p className="text-sm text-gray-500">You&apos;re subscribed! Talk soon.</p>
+        <p className="text-sm text-gray-500">You&apos;re subscribed.</p>
       ) : (
         <form onSubmit={handleSubmit} className="flex gap-3">
           <input
@@ -51,7 +51,7 @@ export default function Subscribe() {
         </form>
       )}
       {status === "error" && (
-        <p className="text-xs text-red-400 mt-2">Something went wrong. Try again!</p>
+        <p className="text-xs text-red-400 mt-2">Try again.</p>
       )}
     </div>
   );

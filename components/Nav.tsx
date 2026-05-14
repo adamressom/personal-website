@@ -2,85 +2,72 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState, useRef } from "react";
 
 const links = [
-  { href: "/", label: "Home" },
-  { href: "/contact", label: "Contact" },
-  { href: "/blog", label: "Blog" },
+  { label: "Home", href: "/" },
+  { label: "Contact", href: "/contact" },
+  { label: "Blog", href: "/blog" },
 ];
 
 export default function Nav() {
   const pathname = usePathname();
-  const [show, setShow] = useState(true);
-  const lastY = useRef(0);
-  const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  function showNav() {
-    setShow(true);
-    if (hideTimer.current) clearTimeout(hideTimer.current);
-    hideTimer.current = setTimeout(() => setShow(false), 3000);
-  }
-
-  // Show on page load then hide after 3s
-  useEffect(() => {
-    showNav();
-  }, [pathname]);
-
-  // Show on scroll up, hide on scroll down
-  useEffect(() => {
-    const container = document.querySelector("main") as HTMLElement | null;
-    const target = container ?? window;
-
-    const handleScroll = () => {
-      const currentY = container ? container.scrollTop : window.scrollY;
-      if (currentY < lastY.current - 5) {
-        showNav();
-      } else if (currentY > lastY.current + 5) {
-        setShow(false);
-        if (hideTimer.current) clearTimeout(hideTimer.current);
-      }
-      lastY.current = currentY;
-    };
-
-    target.addEventListener("scroll", handleScroll, { passive: true });
-    return () => target.removeEventListener("scroll", handleScroll);
-  }, [pathname]);
-
-  // Show when mouse is near the top of the screen
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (e.clientY < 60) {
-        showNav();
-      }
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
 
   return (
     <nav
-      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-10 py-4 bg-white/95 border-b border-gray-100 transition-transform duration-300"
-      style={{ transform: show ? "translateY(0)" : "translateY(-100%)" }}
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 100,
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: "20px 64px",
+        background: "rgba(248,245,240,0.85)",
+        backdropFilter: "blur(16px)",
+        borderBottom: "1px solid rgba(234,228,220,0.6)",
+        fontFamily: "'Outfit', sans-serif",
+      }}
     >
-      <Link href="/" className="text-sm font-medium tracking-wide text-gray-900">
+      <Link
+        href="/"
+        style={{
+          fontSize: 15,
+          fontWeight: 600,
+          color: "#0F0F0F",
+          textDecoration: "none",
+          letterSpacing: "0.04em",
+          fontFamily: "'Cormorant Garamond', serif",
+        }}
+      >
         AR
       </Link>
-      <div className="flex gap-8">
-        {links.map((link) => (
-          <Link
-            key={link.href}
-            href={link.href}
-            className={`text-xs tracking-wide transition-colors duration-200 ${
-              pathname === link.href
-                ? "text-gray-900"
-                : "text-gray-400 hover:text-gray-900"
-            }`}
-          >
-            {link.label}
-          </Link>
-        ))}
+
+      <div style={{ display: "flex", gap: 32, alignItems: "center" }}>
+        {links.map((l) => {
+          const active = pathname === l.href;
+          return (
+            <Link
+              key={l.label}
+              href={l.href}
+              style={{
+                fontSize: 13,
+                color: active ? "#0F0F0F" : "#8A8078",
+                textDecoration: "none",
+                fontWeight: active ? 600 : 400,
+                letterSpacing: "0.02em",
+                transition: "color 0.2s ease",
+                position: "relative",
+              }}
+            >
+              {l.label}
+              {active && (
+                <span style={{ position: "absolute", bottom: -4, left: 0, right: 0, height: 1.5, background: "#C4A882", borderRadius: 1 }} />
+              )}
+            </Link>
+          );
+        })}
       </div>
     </nav>
   );

@@ -63,6 +63,24 @@ export default function Contact() {
               <p className="mt-3 text-xs leading-6 text-[#4f5b53]">
                 You will get short notes on projects, tools, and lessons.
               </p>
+              <svg
+                aria-hidden="true"
+                className="smiley mx-auto mt-6"
+                viewBox="0 0 96 72"
+                fill="none"
+              >
+                <circle
+                  className="smiley-eye smiley-eye-wink"
+                  cx="30"
+                  cy="22"
+                  r="5"
+                />
+                <circle className="smiley-eye" cx="66" cy="22" r="5" />
+                <path
+                  className="smiley-mouth"
+                  d="M24 39C28 50 36 56 48 56C60 56 68 50 72 39"
+                />
+              </svg>
             </div>
           ) : (
             <div>
@@ -85,6 +103,51 @@ export default function Contact() {
           )}
         </div>
       </section>
+
+      <style jsx>{`
+        .smiley {
+          display: block;
+          width: 96px;
+          height: 72px;
+        }
+
+        .smiley-eye {
+          fill: #20221f;
+        }
+
+        .smiley-eye-wink {
+          transform-box: fill-box;
+          transform-origin: center;
+          animation: wink 3s ease-in-out infinite;
+        }
+
+        .smiley-mouth {
+          stroke: #20221f;
+          stroke-width: 4;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+        }
+
+        @keyframes wink {
+          0%,
+          72%,
+          86%,
+          100% {
+            transform: scaleY(1);
+          }
+
+          78%,
+          82% {
+            transform: scaleY(0.12);
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .smiley-eye-wink {
+            animation: none;
+          }
+        }
+      `}</style>
     </main>
   );
 }

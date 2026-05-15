@@ -16,7 +16,7 @@ export type BlogPost = {
 export const posts: BlogPost[] = [
   {
     slug: "biggest-coding-project-didnt-launch",
-    date: "Mar 2026",
+    date: "April 2026",
     title: "My biggest coding project did not launch. Here's why.",
     excerpt:
       "I built a full-stack app with auth, data, deployment, and a polished UI. Then I stopped before launch.",
@@ -38,7 +38,7 @@ export const posts: BlogPost[] = [
   },
   {
     slug: "missed-three-concerts-this-school-year",
-    date: "Feb 2026",
+    date: "May 2026",
     title: "I missed three concerts this school year. Here's why.",
     excerpt:
       "I skipped Osamason, Nettspend, Che, and Rolling Loud plans. Some reasons were valid. Some were not.",
@@ -63,7 +63,7 @@ export const posts: BlogPost[] = [
   },
   {
     slug: "why-i-made-this-site",
-    date: "Jan 2026",
+    date: "April 2026",
     title: "Why I made this site.",
     excerpt:
       "I wanted one place for my work, notes, links, and experiments. A small site makes that easier.",

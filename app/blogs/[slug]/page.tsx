@@ -65,7 +65,7 @@ export default async function BlogPostPage({
                 className={`relative overflow-hidden rounded-2xl border border-[#d4ded2] bg-[#fbfaf3] ${
                   post.image.orientation === "portrait"
                     ? "mx-auto aspect-[4/5] max-w-[260px]"
-                    : "aspect-[16/9] max-w-md"
+                    : "mx-auto aspect-[16/9] max-w-md"
                 }`}
               >
                 <Image

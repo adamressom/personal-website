@@ -9,7 +9,6 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-geist-mono",
 });
-
 export const metadata: Metadata = {
   title: "adamressom.dev",
   description: "Adam Ressom, software engineer based near Washington, D.C.",

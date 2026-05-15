@@ -1,13 +1,6 @@
 import Link from "next/link";
 import { featuredWork } from "@/lib/work";
 
-const projects = [
-  ["Personal Website", "Next.js, Convex, WorkOS", "I rebuilt this site as a small personal system."],
-  ["GmailAI", "Python, Flask, Gemini", "I built email triage tools for a cleaner inbox."],
-  ["Dodge The Falling Blocks", "Python, Pygame", "I made a small arcade game with rising difficulty."],
-  ["Ressom Properties", "Next.js, TypeScript", "I worked on a real estate platform for my family."],
-];
-
 const current = [
   ["studying", "CS @ Michigan. Software and web systems."],
   ["building", "Apps with auth, data, and clear flows."],
@@ -25,8 +18,11 @@ export default function Home() {
           Adam Ressom
         </h1>
         <p className="mx-auto mt-4 max-w-lg text-sm leading-7 text-[#4f5b53]">
-          I build practical web tools. I care about clear interfaces, useful
-          data, and reliable deployment.
+          CS student at Michigan. Building things that help people.
+        </p>
+        <p className="mx-auto mt-2 max-w-lg text-sm leading-7 text-[#4f5b53]">
+          I study computer science and build projects in software, AI, and data.
+          This is where I share what I&apos;m building and learning.
         </p>
         <div className="mx-auto mt-7 flex w-fit flex-wrap justify-center gap-2 text-[12px] font-medium lowercase">
           <a className="rounded-full bg-[#20221f] px-3 py-1.5 text-[#fbfaf3]" href="https://github.com/adamressom" target="_blank" rel="noreferrer">
@@ -100,25 +96,53 @@ export default function Home() {
       </section>
 
       <section className="mx-auto mt-12 max-w-2xl">
-        <div className="mb-5 flex items-center justify-between border-b border-[#d4ded2] pb-3">
+        <div className="border-b border-[#d4ded2] pb-3">
           <h2 className="mono-font text-[11px] font-semibold uppercase tracking-[0.16em] text-[#386f8f]">
-            current shelf
+            about
           </h2>
-          <Link href="/blogs" className="text-xs font-medium text-[#c45f3a]">
-            read notes
-          </Link>
         </div>
-        <div className="space-y-3">
-          {projects.map(([name, stack, detail]) => (
-            <article key={name} className="rounded-2xl border border-[#d4ded2] bg-[#fbfaf3]/70 p-4">
-              <div className="flex flex-wrap items-baseline justify-between gap-2">
-                <h3 className="text-sm font-semibold">{name}</h3>
-                <p className="mono-font text-[10px] text-[#667069]">{stack}</p>
-              </div>
-              <p className="mt-2 text-xs leading-6 text-[#4f5b53]">{detail}</p>
-            </article>
-          ))}
+        <div className="mt-6 space-y-5 text-sm leading-7 text-[#4f5b53]">
+          <p>
+            I started coding in high school doing data science work at research
+            labs and biotech startups in D.C. Went north to the University of
+            Michigan for CS.
+          </p>
+          <p>
+            Graduating in three and a half years. Interned at Georgetown
+            Lombardi Cancer Center doing metabolomics data analysis, then at
+            OmicsCraft building AI-powered research platforms. Spent summers
+            sharpening my full-stack skills through SEO&apos;s engineering
+            program, building everything from Python games to FIFA match
+            analytics with machine learning.
+          </p>
+          <p>
+            Active in ColorStack, NSBE, and MLT on campus. I don&apos;t know what
+            comes after December 2027, but I&apos;m working on it.
+          </p>
         </div>
+      </section>
+
+      <section className="mx-auto mt-12 max-w-2xl">
+        <div className="border-b border-[#d4ded2] pb-3">
+          <h2 className="mono-font text-[11px] font-semibold uppercase tracking-[0.16em] text-[#386f8f]">
+            education
+          </h2>
+        </div>
+        <article className="mt-6 border-l-2 border-[#386f8f] pl-4">
+          <h3 className="text-base font-semibold text-[#20221f]">
+            University of Michigan
+          </h3>
+          <p className="mt-2 text-sm leading-6 text-[#4f5b53]">
+            B.S. Computer Science · Dean&apos;s List, University Honors
+          </p>
+          <p className="mt-2 text-sm leading-6 text-[#20221f]">
+            Aug 2024 - Dec 2027
+          </p>
+          <p className="mt-5 text-sm leading-7 text-[#667069]">
+            Computer Organization · UI/UX Design · Data Structures and
+            Algorithms · Software Engineering
+          </p>
+        </article>
       </section>
 
       <footer className="mx-auto mt-14 flex max-w-2xl flex-col gap-4 border-t border-[#d4ded2] pt-6 text-xs text-[#667069] sm:flex-row sm:items-center sm:justify-between">

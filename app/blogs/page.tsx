@@ -21,8 +21,8 @@ export default async function Blogs({
           Blogs
         </h1>
         <p className="mx-auto mt-4 max-w-lg text-sm leading-7 text-[#4f5b53]">
-          Short notes on projects, tools, and decisions. Each post keeps one
-          lesson easy to find.
+          Short notes on projects, tools, and personal moments. Each post
+          captures one lesson I learned from the experience.
         </p>
       </section>
 

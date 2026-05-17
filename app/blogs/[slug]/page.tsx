@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import BlogImageLightbox from "@/components/BlogImageLightbox";
 import { getPost, posts } from "@/lib/blog-posts";
 
 export function generateStaticParams() {
@@ -61,25 +61,11 @@ export default async function BlogPostPage({
               <p key={paragraph}>{paragraph}</p>
             ))}
             {post.image && (
-              <div
-                className={`relative overflow-hidden rounded-2xl border border-[#d4ded2] bg-[#fbfaf3] ${
-                  post.image.orientation === "portrait"
-                    ? "mx-auto aspect-[4/5] max-w-[260px]"
-                    : "mx-auto aspect-[16/9] max-w-md"
-                }`}
-              >
-                <Image
-                  src={post.image.src}
-                  alt={post.image.alt}
-                  fill
-                  sizes={
-                    post.image.orientation === "portrait"
-                      ? "260px"
-                      : "(max-width: 768px) 100vw, 448px"
-                  }
-                  className="object-cover"
-                />
-              </div>
+              <BlogImageLightbox
+                src={post.image.src}
+                alt={post.image.alt}
+                orientation={post.image.orientation}
+              />
             )}
           </div>
         </div>

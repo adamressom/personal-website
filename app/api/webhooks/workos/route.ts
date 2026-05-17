@@ -17,6 +17,7 @@ type Env = {
 };
 
 type UserLike = {
+  id?: unknown;
   email?: unknown;
   firstName?: unknown;
   first_name?: unknown;
@@ -201,13 +202,18 @@ export async function POST(request: Request) {
     return json(400, { error: "Invalid WorkOS webhook signature" });
   }
 
-  // Only user.created sends a welcome email; other WorkOS events are acknowledged.
+  // Only user.created saves a subscriber and sends the existing welcome email.
   if (event.event !== "user.created") {
     return json(200, { received: true, ignored: true });
   }
 
   const user = event.data as UserLike;
+  const workosUserId = asString(user.id);
   const email = asString(user.email);
+  const firstName = asString(user.firstName) ?? asString(user.first_name);
+  const lastName = asString(user.lastName) ?? asString(user.last_name);
+
+  if (!workosUserId) return json(400, { error: "Missing WorkOS user id" });
   if (!email) return json(400, { error: "Missing user email" });
 
   const convex = new ConvexHttpClient(env.convexUrl);
@@ -219,11 +225,22 @@ export async function POST(request: Request) {
     return json(200, { received: true, duplicate: true });
   }
 
+  // Once WorkOS proves the signup is real, store the contact in Convex.
+  // The mutation updates an existing row when the user or email is already known.
+  await convex.mutation(api.subscribers.upsertFromWorkOS, {
+    workosUserId,
+    email,
+    firstName: firstName ?? undefined,
+    lastName: lastName ?? undefined,
+  });
+
   const resend = new Resend(env.resendApiKey);
   const emailBody = buildWelcomeEmail({
     appUrl: env.appUrl,
     name: getUserName(user),
   });
+
+  let emailSent = false;
 
   try {
     // Resend sends the custom welcome email after the WorkOS signup event.
@@ -239,15 +256,15 @@ export async function POST(request: Request) {
     );
 
     if (error) {
-      await convex.mutation(api.workosWebhookEvents.release, { eventId: event.id });
-      return json(500, { error: "Resend failed to send welcome email" });
+      console.error("Resend failed to send welcome email", error);
+    } else {
+      emailSent = true;
     }
-  } catch {
-    await convex.mutation(api.workosWebhookEvents.release, { eventId: event.id });
-    return json(500, { error: "Failed to send welcome email" });
+  } catch (error) {
+    console.error("Failed to send welcome email", error);
   }
 
   await convex.mutation(api.workosWebhookEvents.markSent, { eventId: event.id });
 
-  return json(200, { received: true, sent: true });
+  return json(200, { received: true, sent: emailSent });
 }

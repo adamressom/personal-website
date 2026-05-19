@@ -8,7 +8,12 @@ export type BlogPost = {
   image?: {
     src: string;
     alt: string;
-    orientation: "wide" | "portrait";
+    orientation: "wide" | "portrait" | "square";
+  };
+  titleImage?: {
+    src: string;
+    alt: string;
+    orientation: "wide" | "portrait" | "square";
   };
   body: string[];
 };
@@ -31,7 +36,7 @@ export const posts: BlogPost[] = [
       "This project started with one goal. I wanted to build something that felt real from the first screen. I did not want a tutorial clone or a small demo. I wanted a full web app with auth, a live database, deployment, and a UI that did not look rushed.",
       "I used Next.js, Convex, WorkOS, Vercel, and GitHub Actions. The stack taught me how the pieces of a real app connect. I dealt with route handlers, cookies, schema changes, generated backend functions, and deploy errors. Convex made the data side easier because I could inspect tables and function calls while the app ran. WorkOS slowed me down at first, but fixing the auth flow helped me understand how login works outside a tutorial.",
       "The app reached a real preview deployment. The database worked. Auth worked. The design system was consistent. The deploy pipeline worked from GitHub to Convex to Vercel. From a code point of view, it was ready enough to show.",
-      "Then I stopped because the data was the problem. The app used real listing data, contact information, and pricing that I did not fully own. After asking someone who understood the rules around property data, the answer was clear. I should not publish it without proper licensing and data use terms.",
+      "Then I stopped because the timing and legal risk around the properties became the problem. The app used real listing data, contact information, and pricing, and the project was supposed to be a surprise for a close friend because he wanted to sell more of his properties. But one of the owners was already dealing with a lawsuit, and putting all of his properties online could have created more exposure. After talking it through, I was told not to ship it for that reason.",
       "That was frustrating, especially after spending around two months building it, but it was useful. The project taught me that shipping is not only code. Legal risk, data rights, and compliance can stop a product even when the app works.",
       "I still count the project as a win. I learned how a full-stack app fits together, where production bugs come from, and why a clean launch needs more than a clean repo. The public version never happened, but the skills carried into the next thing I built.",
     ],
@@ -48,6 +53,11 @@ export const posts: BlogPost[] = [
       src: "/blog-afrotech.jpg",
       alt: "Adam standing in front of the AfroTech Conference sign in Houston",
       orientation: "portrait",
+    },
+    titleImage: {
+      src: "/nettspend.jpg",
+      alt: "Nettspend concert photo",
+      orientation: "square",
     },
     body: [
       "I missed three concerts this school year, and the reasons were not really about school.",

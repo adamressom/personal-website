@@ -47,12 +47,35 @@ export default async function BlogPostPage({
           <p className="mono-font text-[10px] lowercase text-[#386f8f]">
             {post.tag} / {post.readTime} / {post.date}
           </p>
-          <h1 className="mt-3 text-3xl font-semibold leading-tight tracking-[-0.03em] sm:text-4xl">
-            {post.title}
-          </h1>
-          <p className="mt-4 max-w-xl text-sm leading-7 text-[#4f5b53]">
-            {post.excerpt}
-          </p>
+          {post.titleImage ? (
+            <div className="mt-3 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+              <div className="min-w-0 flex-1">
+                <h1 className="text-3xl font-semibold leading-tight tracking-[-0.03em] sm:text-4xl">
+                  {post.title}
+                </h1>
+                <p className="mt-4 max-w-xl text-sm leading-7 text-[#4f5b53]">
+                  {post.excerpt}
+                </p>
+              </div>
+              <div className="shrink-0 self-start rounded-[22px] bg-[#fbfaf3] p-2 shadow-[0_18px_50px_rgba(57,70,61,0.12)] sm:self-end">
+                <BlogImageLightbox
+                  src={post.titleImage.src}
+                  alt={post.titleImage.alt}
+                  orientation={post.titleImage.orientation}
+                  variant="title"
+                />
+              </div>
+            </div>
+          ) : (
+            <>
+              <h1 className="mt-3 text-3xl font-semibold leading-tight tracking-[-0.03em] sm:text-4xl">
+                {post.title}
+              </h1>
+              <p className="mt-4 max-w-xl text-sm leading-7 text-[#4f5b53]">
+                {post.excerpt}
+              </p>
+            </>
+          )}
         </header>
 
         <div className="mt-8 rounded-[24px] border border-[#d4ded2] bg-[#fbfaf3]/75 p-5 sm:p-7">

@@ -6,13 +6,15 @@ import { useEffect, useState } from "react";
 type BlogImageLightboxProps = {
   src: string;
   alt: string;
-  orientation: "wide" | "portrait";
+  orientation: "wide" | "portrait" | "square";
+  variant?: "body" | "title";
 };
 
 export default function BlogImageLightbox({
   src,
   alt,
   orientation,
+  variant = "body",
 }: BlogImageLightboxProps) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -32,10 +34,30 @@ export default function BlogImageLightbox({
     };
   }, [isOpen]);
 
-  const frameClass =
-    orientation === "portrait"
-      ? "mx-auto aspect-[4/5] max-w-[260px]"
-      : "mx-auto aspect-[16/9] max-w-md";
+  const frameClass = (() => {
+    if (variant === "title") {
+      if (orientation === "wide") return "w-[min(100%,360px)]";
+      if (orientation === "portrait") return "w-[min(100%,180px)]";
+      return "w-[min(100%,170px)]";
+    }
+
+    if (orientation === "portrait") return "mx-auto max-w-[260px]";
+    if (orientation === "square") return "mx-auto max-w-[280px]";
+
+    return "mx-auto max-w-md";
+  })();
+
+  const previewSize = (() => {
+    if (orientation === "wide") return { width: 896, height: 504 };
+    if (orientation === "portrait") return { width: 520, height: 650 };
+    return { width: 560, height: 560 };
+  })();
+
+  const modalSize = (() => {
+    if (orientation === "wide") return { width: 1280, height: 720 };
+    if (orientation === "portrait") return { width: 760, height: 950 };
+    return { width: 900, height: 900 };
+  })();
 
   return (
     <>
@@ -48,13 +70,20 @@ export default function BlogImageLightbox({
         <Image
           src={src}
           alt={alt}
-          fill
+          width={previewSize.width}
+          height={previewSize.height}
           sizes={
-            orientation === "portrait"
-              ? "260px"
-              : "(max-width: 768px) 100vw, 448px"
+            variant === "title"
+              ? orientation === "wide"
+                ? "(max-width: 768px) 100vw, 360px"
+                : "180px"
+              : orientation === "portrait"
+                ? "260px"
+                : orientation === "square"
+                  ? "280px"
+                  : "(max-width: 768px) 100vw, 448px"
           }
-          className="object-cover"
+          className="h-auto w-full object-cover"
         />
       </button>
 
@@ -77,18 +106,15 @@ export default function BlogImageLightbox({
 
           <div
             onClick={(event) => event.stopPropagation()}
-            className={`relative w-full overflow-hidden rounded-2xl ${
-              orientation === "portrait"
-                ? "h-[min(82vh,760px)] max-w-[608px]"
-                : "aspect-[16/9] max-w-5xl"
-            }`}
+            className="w-full max-w-5xl overflow-hidden rounded-2xl"
           >
             <Image
               src={src}
               alt={alt}
-              fill
+              width={modalSize.width}
+              height={modalSize.height}
               sizes="(max-width: 1024px) 100vw, 1024px"
-              className="object-contain"
+              className="mx-auto h-auto max-h-[82vh] w-auto max-w-full object-contain"
             />
           </div>
         </div>

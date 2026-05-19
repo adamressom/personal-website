@@ -1,27 +1,81 @@
-const projects = [
+import Link from "next/link";
+
+type ProjectLink = {
+  label: string;
+  href: string;
+  external?: boolean;
+};
+
+type Project = {
+  name: string;
+  context: string;
+  dates: string;
+  summary: string;
+  links?: ProjectLink[];
+};
+
+const projects: Project[] = [
   {
-    name: "Personal Website",
-    context: "Next.js, Convex, WorkOS",
+    name: "Open-Source Software Contribution",
+    context: "",
     dates: "",
-    summary: "I rebuilt this site as a small personal system.",
+    summary:
+      "Contributing to a real GitHub project by working through a documented bug or feature request, building the project locally, testing changes, and submitting work through an open-source workflow.",
+  },
+  {
+    name: "Debugging Automation Toolkit",
+    context: "EECS 481 - Software Engineering",
+    dates: "Jan - Feb 2026",
+    summary:
+      "Built Python debugging tools for delta debugging and fault localization to minimize failure-inducing inputs and identify suspicious lines in failing programs.",
+  },
+  {
+    name: "______ Properties",
+    context: "Personal Project",
+    dates: "2026",
+    summary:
+      "Built a property-focused web app with Next.js and TypeScript, using a clean frontend structure for presenting real estate information online. I am not linking the GitHub repo because the project used property data and business context that I should not publish without clearer data rights and permissions.",
+    links: [
+      {
+        label: "Read why",
+        href: "/blogs/biggest-coding-project-didnt-launch",
+      },
+    ],
+  },
+  {
+    name: "User-Centered Interface Design Prototype",
+    context: "EECS 493 - User Interface Development",
+    dates: "Jan - Apr 2026",
+    summary:
+      "Designed and iterated a high-fidelity Figma prototype through user interviews, affinity mapping, storyboarding, think-aloud usability testing, and feedback-driven design improvements.",
   },
   {
     name: "GmailAI",
-    context: "Python, Flask, Gemini",
-    dates: "",
-    summary: "I built email triage tools for a cleaner inbox.",
+    context: "MHacks/Personal Project",
+    dates: "Feb - Mar 2026",
+    summary:
+      "Built an AI-powered Gmail organizer that connects through Google OAuth, categorizes student emails into smart labels, generates summaries and priority scores, and lets users ask inbox questions with cited email responses.",
+    links: [
+      {
+        label: "GitHub",
+        href: "https://github.com/adamressom/GmailAI/tree/main?utm_source=chatgpt.com",
+        external: true,
+      },
+    ],
+  },
+  {
+    name: "Personal Website",
+    context: "Personal Project",
+    dates: "March 2026 - Present",
+    summary:
+      "Rebuilt this site as a small personal system to organize my projects, experience, and updates in one place, with a clean responsive interface and maintainable frontend structure.",
   },
   {
     name: "Dodge The Falling Blocks",
     context: "Python, Pygame",
-    dates: "",
-    summary: "I made a small arcade game with rising difficulty.",
-  },
-  {
-    name: "Ressom Properties",
-    context: "Next.js, TypeScript",
-    dates: "",
-    summary: "I worked on a real estate platform for my family.",
+    dates: "Jun - Aug 2025",
+    summary:
+      "Built a multi-stage arcade game in Python using Pygame, with live hit detection, random block spawning, point tracking, and difficulty that increases as the player survives longer.",
   },
 ];
 
@@ -53,6 +107,31 @@ export default function Archive() {
               <p className="mt-4 max-w-xl text-sm leading-7 text-[#4f5b53]">
                 {project.summary}
               </p>
+              {project.links && (
+                <div className="mt-3 flex flex-wrap gap-3 text-xs font-semibold">
+                  {project.links.map((link) =>
+                    link.external ? (
+                      <a
+                        key={link.href}
+                        href={link.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="lowercase text-[#c45f3a] hover:text-[#20221f]"
+                      >
+                        {link.label}
+                      </a>
+                    ) : (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        className="lowercase text-[#c45f3a] hover:text-[#20221f]"
+                      >
+                        {link.label}
+                      </Link>
+                    ),
+                  )}
+                </div>
+              )}
             </article>
           ))}
         </div>

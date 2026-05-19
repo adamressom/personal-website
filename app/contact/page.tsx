@@ -118,7 +118,7 @@ export default function Contact() {
         .smiley-eye-wink {
           transform-box: fill-box;
           transform-origin: center;
-          animation: wink 3s ease-in-out infinite;
+          animation: wink 2s ease-in-out infinite;
         }
 
         .smiley-mouth {

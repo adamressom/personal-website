@@ -60,7 +60,7 @@ export default function Home() {
             work
           </h2>
           <a
-            href="/MLT%20Resume.pdf"
+            href="/Adam_Ressom_Resume.pdf"
             download
             className="text-xs font-medium text-[#c45f3a]"
           >

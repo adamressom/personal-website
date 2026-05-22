@@ -12,6 +12,9 @@ export default defineSchema({
     subscribed: v.optional(v.boolean()),
     source: v.optional(v.union(v.literal("workos"), v.literal("website"))),
     subscribedAt: v.optional(v.number()),
+    welcomeEmailReservedAt: v.optional(v.number()),
+    welcomeEmailSentAt: v.optional(v.number()),
+    emailSendCount: v.optional(v.number()),
   })
     .index("by_workosUserId", ["workosUserId"])
     .index("by_email", ["email"])
@@ -22,4 +25,11 @@ export default defineSchema({
     createdAt: v.number(),
     processedAt: v.optional(v.number()),
   }).index("by_event_id", ["eventId"]),
+  rateLimits: defineTable({
+    key: v.string(),
+    count: v.number(),
+    resetAt: v.number(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_key", ["key"]),
 });

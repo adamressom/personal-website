@@ -1,9 +1,18 @@
 import { mutation } from "./_generated/server";
 import { v } from "convex/values";
 
+function requireWebhookSecret(webhookSecret: string) {
+  const expectedSecret = process.env.WORKOS_WEBHOOK_SECRET;
+  if (!expectedSecret || webhookSecret !== expectedSecret) {
+    throw new Error("Unauthorized webhook mutation.");
+  }
+}
+
 export const reserve = mutation({
-  args: { eventId: v.string() },
+  args: { eventId: v.string(), webhookSecret: v.string() },
   handler: async (ctx, args) => {
+    requireWebhookSecret(args.webhookSecret);
+
     const existing = await ctx.db
       .query("workosWebhookEvents")
       .withIndex("by_event_id", (q) => q.eq("eventId", args.eventId))
@@ -22,8 +31,10 @@ export const reserve = mutation({
 });
 
 export const markSent = mutation({
-  args: { eventId: v.string() },
+  args: { eventId: v.string(), webhookSecret: v.string() },
   handler: async (ctx, args) => {
+    requireWebhookSecret(args.webhookSecret);
+
     const existing = await ctx.db
       .query("workosWebhookEvents")
       .withIndex("by_event_id", (q) => q.eq("eventId", args.eventId))
@@ -39,8 +50,10 @@ export const markSent = mutation({
 });
 
 export const release = mutation({
-  args: { eventId: v.string() },
+  args: { eventId: v.string(), webhookSecret: v.string() },
   handler: async (ctx, args) => {
+    requireWebhookSecret(args.webhookSecret);
+
     const existing = await ctx.db
       .query("workosWebhookEvents")
       .withIndex("by_event_id", (q) => q.eq("eventId", args.eventId))

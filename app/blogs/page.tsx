@@ -1,17 +1,14 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import BlogSignupPopup from "@/components/BlogSignupPopup";
 import { posts } from "@/lib/blog-posts";
 
-export default async function Blogs({
-  searchParams,
-}: {
-  searchParams: Promise<{ subscribed?: string }>;
-}) {
-  const { subscribed } = await searchParams;
-
+export default function Blogs() {
   return (
     <main className="min-h-screen bg-[#eef4ec] px-4 pb-20 pt-16 text-[#20221f]">
-      <BlogSignupPopup initialShow={subscribed === "true"} />
+      <Suspense fallback={null}>
+        <BlogSignupPopup />
+      </Suspense>
 
       <section className="mx-auto max-w-2xl text-center">
         <p className="mono-font mx-auto w-fit rounded-full border border-[#d4ded2] bg-[#fbfaf3] px-3 py-1 text-[10px] lowercase tracking-[0.18em] text-[#386f8f]">

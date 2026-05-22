@@ -10,6 +10,12 @@ export type BlogPost = {
     alt: string;
     orientation: "wide" | "portrait" | "square";
   };
+  repo?: {
+    href: string;
+    label: string;
+    textBefore: string;
+    textAfter: string;
+  };
   titleImage?: {
     src: string;
     alt: string;
@@ -31,6 +37,13 @@ export const posts: BlogPost[] = [
       src: "/blog-project.png",
       alt: "Screenshot of the production-style web app contact page",
       orientation: "wide",
+    },
+    repo: {
+      href: "https://github.com/adamressom/________Properties",
+      label: "adamressom/________Properties",
+      textBefore:
+        "I also made a public template version of the project on GitHub. It keeps the reusable real estate app structure, including listings, team pages, contact forms, auth, saved favorites, admin-protected lead data, validation, rate limiting, and the deployment-ready Next.js, Convex, and WorkOS setup:",
+      textAfter: ".",
     },
     body: [
       "This project started with one goal. I wanted to build something that felt real from the first screen. I did not want a tutorial clone or a small demo. I wanted a full web app with auth, a live database, deployment, and a UI that did not look rushed.",

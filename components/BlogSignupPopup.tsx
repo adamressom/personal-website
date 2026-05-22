@@ -1,15 +1,21 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
-export default function BlogSignupPopup({ initialShow }: { initialShow: boolean }) {
-  const [showPopup, setShowPopup] = useState(initialShow);
+export default function BlogSignupPopup() {
+  const searchParams = useSearchParams();
+  const subscribed = searchParams.get("subscribed") === "true";
+  const [dismissed, setDismissed] = useState(false);
+  const showPopup = subscribed && !dismissed;
+
+  const closePopup = () => setDismissed(true);
 
   if (!showPopup) return null;
 
   return (
     <div
-      onClick={() => setShowPopup(false)}
+      onClick={closePopup}
       className="fixed inset-0 z-50 flex items-center justify-center bg-[#eef4ec]/80 px-5 backdrop-blur-md"
     >
       <div
@@ -17,7 +23,7 @@ export default function BlogSignupPopup({ initialShow }: { initialShow: boolean 
         className="relative w-full max-w-xs rounded-3xl border border-[#d4ded2] bg-[#fbfaf3] p-7 text-center"
       >
         <button
-          onClick={() => setShowPopup(false)}
+          onClick={closePopup}
           className="absolute right-5 top-4 text-sm text-[#667069] hover:text-[#c45f3a]"
         >
           x
@@ -27,7 +33,7 @@ export default function BlogSignupPopup({ initialShow }: { initialShow: boolean 
           You&apos;ll get notes on projects, tools, and lessons I can reuse.
         </p>
         <button
-          onClick={() => setShowPopup(false)}
+          onClick={closePopup}
           className="mt-6 rounded-full bg-[#20221f] px-4 py-2 text-xs font-semibold lowercase text-[#fbfaf3]"
         >
           got it

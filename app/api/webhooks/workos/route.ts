@@ -4,14 +4,23 @@ import { Resend } from "resend";
 import { WorkOS, type Event } from "@workos-inc/node";
 
 import { api } from "@/convex/_generated/api";
+import {
+  getClientIp,
+  rateLimit,
+  rateLimitResponse,
+} from "@/lib/security";
+import { isValidEmail, normalizeEmail } from "@/lib/validation";
+import { buildWelcomeEmail } from "@/lib/welcome-email";
 
 export const runtime = "nodejs";
 
 type Env = {
   appUrl: string;
   convexUrl: string;
-  resendApiKey: string;
-  resendFromEmail: string;
+  resendApiKey: string | null;
+  resendDailyLimit: number;
+  resendEnabled: boolean;
+  resendFromEmail: string | null;
   workosApiKey: string;
   workosWebhookSecret: string;
 };
@@ -39,6 +48,8 @@ function getEnv(): Env | null {
     NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_CONVEX_URL,
     RESEND_API_KEY,
+    RESEND_DAILY_LIMIT,
+    RESEND_ENABLED,
     RESEND_FROM_EMAIL,
     WORKOS_API_KEY,
     WORKOS_WEBHOOK_SECRET,
@@ -47,19 +58,24 @@ function getEnv(): Env | null {
   if (
     !NEXT_PUBLIC_APP_URL ||
     !NEXT_PUBLIC_CONVEX_URL ||
-    !RESEND_API_KEY ||
-    !RESEND_FROM_EMAIL ||
     !WORKOS_API_KEY ||
     !WORKOS_WEBHOOK_SECRET
   ) {
     return null;
   }
 
+  const resendEnabled = RESEND_ENABLED === "true";
+  if (resendEnabled && (!RESEND_API_KEY || !RESEND_FROM_EMAIL)) {
+    return null;
+  }
+
   return {
     appUrl: NEXT_PUBLIC_APP_URL,
     convexUrl: NEXT_PUBLIC_CONVEX_URL,
-    resendApiKey: RESEND_API_KEY,
-    resendFromEmail: RESEND_FROM_EMAIL,
+    resendApiKey: RESEND_API_KEY ?? null,
+    resendDailyLimit: Math.min(Number(RESEND_DAILY_LIMIT ?? "20") || 20, 99),
+    resendEnabled,
+    resendFromEmail: RESEND_FROM_EMAIL ?? null,
     workosApiKey: WORKOS_API_KEY,
     workosWebhookSecret: WORKOS_WEBHOOK_SECRET,
   };
@@ -85,99 +101,29 @@ function getUserName(user: UserLike) {
   return firstName;
 }
 
-function escapeHtml(value: string) {
-  return value
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
-}
-
-function buildWelcomeEmail({ appUrl, name }: { appUrl: string; name: string | null }) {
-  const baseUrl = appUrl.replace(/\/$/, "");
-  const safeUrl = escapeHtml(baseUrl);
-  const textGreeting = name ? `Hi ${name},` : "Hi there,";
-  const htmlGreeting = name ? `Hi ${escapeHtml(name)},` : "Hi there,";
-  const headline = name ? `Welcome, ${escapeHtml(name.split(" ")[0])}.` : "Welcome in.";
-
-  return {
-    text: [
-      textGreeting,
-      "",
-      "Thanks for signing up for adamressom.dev. I am glad you are here.",
-      "You can head back to the site whenever you are ready:",
-      baseUrl,
-      "",
-      "If you did not create this account, you can ignore this email.",
-    ].join("\n"),
-    html: `<!doctype html>
-<html>
-  <body style="margin:0;padding:0;background:#eef4ec;color:#20221f;font-family:Arial,Helvetica,sans-serif;">
-    <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">
-      Thanks for signing up for adamressom.dev.
-    </div>
-    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#eef4ec;margin:0;padding:28px 12px;">
-      <tr>
-        <td align="center">
-          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:560px;background:#fbfaf3;border:1px solid #d4ded2;border-radius:24px;overflow:hidden;box-shadow:0 24px 80px rgba(57,70,61,0.08);">
-            <tr>
-              <td style="padding:28px 24px 10px;text-align:center;">
-                <div style="display:inline-block;border:1px solid #d4ded2;border-radius:999px;background:#eef4ec;padding:7px 12px;color:#386f8f;font-size:10px;line-height:14px;letter-spacing:1.8px;text-transform:uppercase;font-family:Consolas,'SFMono-Regular',monospace;">
-                  operation adamressom.dev
-                </div>
-                <h1 style="margin:24px 0 0;color:#20221f;font-size:30px;line-height:36px;font-weight:700;letter-spacing:0;">
-                  ${headline}
-                </h1>
-              </td>
-            </tr>
-            <tr>
-              <td style="padding:12px 28px 4px;">
-                <p style="margin:0 0 16px;color:#4f5b53;font-size:15px;line-height:26px;">
-                  ${htmlGreeting}
-                </p>
-                <p style="margin:0;color:#4f5b53;font-size:15px;line-height:26px;">
-                  Thanks for signing up for adamressom.dev. I build practical web tools and share notes on projects, systems, and the things I am learning along the way. Glad to have you here.
-                </p>
-              </td>
-            </tr>
-            <tr>
-              <td align="center" style="padding:28px 28px 12px;">
-                <a href="${safeUrl}" style="display:inline-block;background:#20221f;color:#fbfaf3;text-decoration:none;border-radius:999px;padding:13px 22px;font-size:13px;line-height:18px;font-weight:700;">
-                  Open adamressom.dev
-                </a>
-              </td>
-            </tr>
-            <tr>
-              <td style="padding:0 28px 24px;text-align:center;">
-                <p style="margin:0;color:#667069;font-size:12px;line-height:20px;">
-                  Button not working? Open this link:<br>
-                  <a href="${safeUrl}" style="color:#386f8f;text-decoration:underline;word-break:break-all;">${safeUrl}</a>
-                </p>
-              </td>
-            </tr>
-            <tr>
-              <td style="background:#eef4ec;border-top:1px solid #d4ded2;padding:18px 24px;text-align:center;">
-                <p style="margin:0;color:#667069;font-size:12px;line-height:20px;">
-                  If you did not create this account, you can ignore this email.
-                </p>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-    </table>
-  </body>
-</html>`,
-  };
-}
-
 export async function POST(request: Request) {
+  const ip = getClientIp(request);
+  const limit = rateLimit({
+    key: `workos-webhook:${ip}`,
+    limit: 60,
+    windowMs: 60 * 1000,
+  });
+
+  if (!limit.allowed) return rateLimitResponse(limit);
+
   // WorkOS sends the signup webhook to this public route handler.
   const signature = request.headers.get("workos-signature");
   if (!signature) return json(400, { error: "Missing workos-signature header" });
 
+  const contentLength = Number(request.headers.get("content-length") ?? "0");
+  if (contentLength > 64 * 1024) {
+    return json(413, { error: "Webhook payload too large" });
+  }
+
   const rawBody = await request.text();
+  if (rawBody.length > 64 * 1024) {
+    return json(413, { error: "Webhook payload too large" });
+  }
 
   let payload: Record<string, unknown>;
   try {
@@ -215,26 +161,41 @@ export async function POST(request: Request) {
 
   if (!workosUserId) return json(400, { error: "Missing WorkOS user id" });
   if (!email) return json(400, { error: "Missing user email" });
+  const normalizedEmail = normalizeEmail(email);
+  if (!isValidEmail(normalizedEmail)) return json(400, { error: "Invalid user email" });
 
   const convex = new ConvexHttpClient(env.convexUrl);
   const reservation = await convex.mutation(api.workosWebhookEvents.reserve, {
     eventId: event.id,
+    webhookSecret: env.workosWebhookSecret,
   });
 
   if (reservation.alreadyProcessed) {
     return json(200, { received: true, duplicate: true });
   }
 
-  // Once WorkOS proves the signup is real, store the contact in Convex.
-  // The mutation updates an existing row when the user or email is already known.
-  await convex.mutation(api.subscribers.upsertFromWorkOS, {
-    workosUserId,
-    email,
-    firstName: firstName ?? undefined,
-    lastName: lastName ?? undefined,
-  });
+  let shouldSendWelcomeEmail = false;
 
-  const resend = new Resend(env.resendApiKey);
+  try {
+    // Once WorkOS proves the signup is real, store the contact in Convex.
+    // The mutation updates an existing row when the user or email is already known.
+    const subscriber = await convex.mutation(api.subscribers.upsertFromWorkOS, {
+      webhookSecret: env.workosWebhookSecret,
+      workosUserId,
+      email: normalizedEmail,
+      firstName: firstName ?? undefined,
+      lastName: lastName ?? undefined,
+      welcomeEmailDailyLimit: env.resendEnabled ? env.resendDailyLimit : 0,
+    });
+    shouldSendWelcomeEmail = env.resendEnabled && subscriber.sendWelcomeEmail;
+  } catch (error) {
+    await convex.mutation(api.workosWebhookEvents.release, {
+      eventId: event.id,
+      webhookSecret: env.workosWebhookSecret,
+    });
+    throw error;
+  }
+
   const emailBody = buildWelcomeEmail({
     appUrl: env.appUrl,
     name: getUserName(user),
@@ -242,29 +203,44 @@ export async function POST(request: Request) {
 
   let emailSent = false;
 
-  try {
-    // Resend sends the custom welcome email after the WorkOS signup event.
-    const { error } = await resend.emails.send(
-      {
-        from: env.resendFromEmail,
-        to: email,
-        subject: "Welcome to adamressom.dev",
-        html: emailBody.html,
-        text: emailBody.text,
-      },
-      { idempotencyKey: event.id },
-    );
-
-    if (error) {
-      console.error("Resend failed to send welcome email", error);
-    } else {
-      emailSent = true;
+  if (shouldSendWelcomeEmail) {
+    if (!env.resendApiKey || !env.resendFromEmail) {
+      return json(500, { error: "Missing Resend environment variables" });
     }
-  } catch (error) {
-    console.error("Failed to send welcome email", error);
+
+    const resend = new Resend(env.resendApiKey);
+
+    try {
+      // Resend sends the custom welcome email after the WorkOS signup event.
+      const { error } = await resend.emails.send(
+        {
+          from: env.resendFromEmail,
+          to: normalizedEmail,
+          subject: "Welcome to adamressom.dev",
+          html: emailBody.html,
+          text: emailBody.text,
+        },
+        { idempotencyKey: event.id },
+      );
+
+      if (error) {
+        console.error("Resend failed to send welcome email", error);
+      } else {
+        emailSent = true;
+        await convex.mutation(api.subscribers.markWelcomeEmailSent, {
+          webhookSecret: env.workosWebhookSecret,
+          workosUserId,
+        });
+      }
+    } catch (error) {
+      console.error("Failed to send welcome email", error);
+    }
   }
 
-  await convex.mutation(api.workosWebhookEvents.markSent, { eventId: event.id });
+  await convex.mutation(api.workosWebhookEvents.markSent, {
+    eventId: event.id,
+    webhookSecret: env.workosWebhookSecret,
+  });
 
   return json(200, { received: true, sent: emailSent });
 }

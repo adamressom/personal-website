@@ -11,14 +11,10 @@ const links = [
   { label: "contact", href: "/contact" },
 ];
 
-function getInitial(email: string) {
-  return email.trim().charAt(0).toUpperCase();
-}
-
 export default function Nav() {
   const pathname = usePathname();
-  const [userEmail, setUserEmail] = useState<string | null>(null);
-  const isSignedIn = Boolean(userEmail);
+  const [userInitial, setUserInitial] = useState<string | null>(null);
+  const isSignedIn = Boolean(userInitial);
 
   useEffect(() => {
     let active = true;
@@ -28,10 +24,11 @@ export default function Nav() {
         const response = await fetch("/api/me");
         if (!response.ok) return;
 
-        const data: { email?: string | null } = await response.json();
-        if (active) setUserEmail(data.email ?? null);
+        const data: { signedIn?: boolean; initial?: string | null } =
+          await response.json();
+        if (active) setUserInitial(data.signedIn ? (data.initial ?? null) : null);
       } catch {
-        if (active) setUserEmail(null);
+        if (active) setUserInitial(null);
       }
     }
 
@@ -73,14 +70,13 @@ export default function Nav() {
           {isSignedIn ? (
             <div
               className="flex max-w-[150px] items-center gap-2 rounded-full border border-[#d4ded2] bg-[#eef4ec] py-1 pl-1 pr-2 text-[#20221f]"
-              title={userEmail ?? undefined}
-              aria-label={`Signed in as ${userEmail}`}
+              aria-label="Signed in"
             >
               <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-[#20221f] text-[10px] font-semibold text-[#fbfaf3]">
-                {getInitial(userEmail!)}
+                {userInitial}
               </span>
               <span className="hidden truncate text-[11px] font-medium lowercase text-[#4f5b53] sm:block">
-                {userEmail}
+                signed in
               </span>
             </div>
           ) : (

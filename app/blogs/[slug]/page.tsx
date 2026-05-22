@@ -33,6 +33,11 @@ export default async function BlogPostPage({
 
   if (!post) notFound();
 
+  const postIndex = posts.findIndex((item) => item.slug === post.slug);
+  const previousPost = postIndex > 0 ? posts[postIndex - 1] : null;
+  const nextPost =
+    postIndex >= 0 && postIndex < posts.length - 1 ? posts[postIndex + 1] : null;
+
   return (
     <main className="min-h-screen bg-[#eef4ec] px-4 pb-20 pt-16 text-[#20221f]">
       <article className="mx-auto max-w-2xl">
@@ -90,8 +95,56 @@ export default async function BlogPostPage({
                 orientation={post.image.orientation}
               />
             )}
+            {post.repo && (
+              <p>
+                {post.repo.textBefore}{" "}
+                <Link
+                  href={post.repo.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-semibold text-[#386f8f] underline decoration-[#386f8f]/30 underline-offset-4 hover:text-[#c45f3a]"
+                >
+                  {post.repo.label}
+                </Link>
+                {post.repo.textAfter}
+              </p>
+            )}
           </div>
         </div>
+
+        {(previousPost || nextPost) && (
+          <nav className="mt-6 grid gap-3 sm:grid-cols-2" aria-label="More blog posts">
+            {previousPost ? (
+              <Link
+                href={`/blogs/${previousPost.slug}`}
+                className="rounded-2xl border border-[#d4ded2] bg-[#fbfaf3]/75 p-4 transition-colors hover:border-[#b8c7b6]"
+              >
+                <span className="mono-font text-[10px] lowercase text-[#386f8f]">
+                  previous
+                </span>
+                <span className="mt-2 block text-sm font-semibold text-[#20221f]">
+                  {previousPost.title}
+                </span>
+              </Link>
+            ) : (
+              <div className="hidden sm:block" />
+            )}
+
+            {nextPost && (
+              <Link
+                href={`/blogs/${nextPost.slug}`}
+                className="rounded-2xl border border-[#d4ded2] bg-[#fbfaf3]/75 p-4 text-left transition-colors hover:border-[#b8c7b6] sm:text-right"
+              >
+                <span className="mono-font text-[10px] lowercase text-[#386f8f]">
+                  next
+                </span>
+                <span className="mt-2 block text-sm font-semibold text-[#20221f]">
+                  {nextPost.title}
+                </span>
+              </Link>
+            )}
+          </nav>
+        )}
       </article>
     </main>
   );

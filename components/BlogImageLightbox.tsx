@@ -83,6 +83,7 @@ export default function BlogImageLightbox({
                   ? "280px"
                   : "(max-width: 768px) 100vw, 448px"
           }
+          preload={variant === "title"}
           className="h-auto w-full object-cover"
         />
       </button>

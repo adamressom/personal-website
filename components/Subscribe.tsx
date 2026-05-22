@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { isValidEmail, normalizeEmail } from "@/lib/validation";
 
 export default function Subscribe() {
   const [email, setEmail] = useState("");
@@ -11,10 +12,15 @@ export default function Subscribe() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!email) return;
+    const normalizedEmail = normalizeEmail(email);
+    if (!isValidEmail(normalizedEmail)) {
+      setStatus("error");
+      return;
+    }
+
     setStatus("loading");
     try {
-      await subscribe({ email });
+      await subscribe({ email: normalizedEmail });
       setStatus("success");
       setEmail("");
     } catch {
@@ -39,6 +45,8 @@ export default function Subscribe() {
             placeholder="your@email.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            maxLength={254}
+            required
             className="text-sm px-4 py-2 border border-gray-200 rounded-full outline-none focus:border-gray-400 transition-colors w-64"
           />
           <button

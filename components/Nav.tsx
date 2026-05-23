@@ -21,8 +21,8 @@ export default function Nav() {
 
     async function loadUser() {
       try {
-        const response = await fetch("/api/me");
-        if (!response.ok) return;
+        const response = await fetch("/api/me", { cache: "no-store" });
+        if (!response.ok) throw new Error("Unable to load session");
 
         const data: { signedIn?: boolean; initial?: string | null } =
           await response.json();
@@ -33,9 +33,11 @@ export default function Nav() {
     }
 
     loadUser();
+    window.addEventListener("pageshow", loadUser);
 
     return () => {
       active = false;
+      window.removeEventListener("pageshow", loadUser);
     };
   }, []);
 

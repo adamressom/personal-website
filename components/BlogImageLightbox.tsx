@@ -21,16 +21,24 @@ export default function BlogImageLightbox({
   useEffect(() => {
     if (!isOpen) return;
 
+    const previousOverflow = document.body.style.overflow;
+
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") setIsOpen(false);
     };
+    const closeBeforeHistorySnapshot = () => {
+      document.body.style.overflow = previousOverflow;
+      setIsOpen(false);
+    };
 
     document.addEventListener("keydown", closeOnEscape);
+    window.addEventListener("pagehide", closeBeforeHistorySnapshot);
     document.body.style.overflow = "hidden";
 
     return () => {
       document.removeEventListener("keydown", closeOnEscape);
-      document.body.style.overflow = "";
+      window.removeEventListener("pagehide", closeBeforeHistorySnapshot);
+      document.body.style.overflow = previousOverflow;
     };
   }, [isOpen]);
 

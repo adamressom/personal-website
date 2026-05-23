@@ -9,25 +9,39 @@ const socials = [
   { label: "instagram", href: "https://www.instagram.com/adamressom" },
 ];
 
+type MeResponse = {
+  signedIn?: boolean;
+};
+
 export default function Contact() {
-  const [visible, setVisible] = useState(false);
   const [isSignedIn, setIsSignedIn] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      const cookies = document.cookie.split(";").map((c) => c.trim());
-      const signedIn = cookies.some((c) => c.startsWith("is_signed_in="));
-      setIsSignedIn(signedIn);
-      setVisible(true);
-    }, 100);
-    return () => clearTimeout(timer);
+    let active = true;
+
+    async function loadUser() {
+      try {
+        const response = await fetch("/api/me", { cache: "no-store" });
+        if (!response.ok) throw new Error("Unable to load session");
+
+        const data: MeResponse = await response.json();
+        if (active) setIsSignedIn(Boolean(data.signedIn));
+      } catch {
+        if (active) setIsSignedIn(false);
+      }
+    }
+
+    loadUser();
+    window.addEventListener("pageshow", loadUser);
+
+    return () => {
+      active = false;
+      window.removeEventListener("pageshow", loadUser);
+    };
   }, []);
 
   return (
-    <main
-      className="min-h-screen bg-[#eef4ec] px-4 pb-20 pt-16 text-[#20221f]"
-      style={{ opacity: visible ? 1 : 0, transition: "opacity 0.6s ease" }}
-    >
+    <main className="min-h-screen bg-[#eef4ec] px-4 pb-20 pt-16 text-[#20221f]">
       <section className="mx-auto max-w-2xl text-center">
         <p className="mono-font mx-auto w-fit rounded-full border border-[#d4ded2] bg-[#fbfaf3] px-3 py-1 text-[10px] lowercase tracking-[0.18em] text-[#386f8f]">
           open channel

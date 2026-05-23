@@ -23,11 +23,17 @@ export async function GET() {
     typeof session.expiresAt !== "number" ||
     session.expiresAt <= Date.now()
   ) {
-    return NextResponse.json({ signedIn: false, initial: null });
+    return NextResponse.json(
+      { signedIn: false, initial: null },
+      { headers: { "Cache-Control": "no-store" } },
+    );
   }
 
-  return NextResponse.json({
-    signedIn: true,
-    initial: session.initial.slice(0, 1),
-  });
+  return NextResponse.json(
+    {
+      signedIn: true,
+      initial: session.initial.slice(0, 1),
+    },
+    { headers: { "Cache-Control": "no-store" } },
+  );
 }

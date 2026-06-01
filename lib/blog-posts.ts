@@ -27,7 +27,7 @@ export type BlogPost = {
 export const posts: BlogPost[] = [
   {
     slug: "biggest-coding-project-didnt-launch",
-    date: "April 2026",
+    date: "June 2026",
     title: "My biggest coding project did not launch. Here's why.",
     excerpt:
       "I built a full-stack app with auth, data, deployment, and a polished UI. Then I stopped before launch.",

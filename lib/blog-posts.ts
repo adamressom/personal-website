@@ -21,10 +21,53 @@ export type BlogPost = {
     alt: string;
     orientation: "wide" | "portrait" | "square";
   };
+  inlineImages?: {
+    afterParagraph: number;
+    src: string;
+    alt: string;
+    orientation: "wide" | "portrait" | "square";
+  }[];
   body: string[];
 };
 
 export const posts: BlogPost[] = [
+  {
+    slug: "two-cities-two-internships",
+    date: "July 2026",
+    title: "Two Cities, Two Internships: How to Manage Conflicting Demands",
+    excerpt:
+      "Two serious commitments can work at the same time, but only when you communicate early and plan every transition.",
+    tag: "Work",
+    readTime: "4 min",
+    titleImage: {
+      src: "/ZOHRAN.jpg.jpg",
+      alt: "Adam in Times Square after encountering Zohran Mamdani",
+      orientation: "wide",
+    },
+    image: {
+      src: "/mdi-summit.jpg.JPG",
+      alt: "Adam with Georgetown Data Science Corps team members at the MDI Summit",
+      orientation: "wide",
+    },
+    inlineImages: [
+      {
+        afterParagraph: 4,
+        src: "/seo-nyc.jpg.JPG",
+        alt: "Adam in Times Square during the SEO Tech internship trip to New York City",
+        orientation: "wide",
+      },
+    ],
+    body: [
+      "Balancing two internships creates tight schedules. You have to negotiate your availability before conflicts turn into broken plans.",
+      "During July 2026, two software commitments overlapped. The Georgetown Data Science Corps required in-person research from 9:00 AM to 4:00 PM, where I analyzed datasets with more than 1.1 million records. SEO Tech required remote engineering from 6:00 PM to 9:00 PM, where I was building the PlanGuard application with Flask.",
+      "A direct scheduling conflict appeared on July 24. SEO Tech invited interns to TechDevCon in New York City from July 27 to July 30, and attendance was mandatory. Georgetown required a final research presentation on July 29 at the McCourt School of Public Policy on Capitol Hill.",
+      "I could not work in two cities at the same time, so I asked SEO Tech about the conflict directly. They approved a shortened schedule for July 27 and July 28, which made it possible to attend both commitments.",
+      "Travel began at noon on July 27. The train from Washington to New York took five hours, and I checked in at the Millennium Broadway Hotel near Times Square. Afterward, an evening walk through Manhattan led to a brief encounter with local politician Zohran Mamdani, followed by team bonding at Electric Shuffle.",
+      "TechDevCon sessions started on July 28 at Civic Hall on 14th Street. The schedule covered AI applications, technical panels, and networking opportunities. After connecting with interns, peers, and engineers throughout the venue, I took the train back to Washington that evening and used the ride to rehearse the Georgetown slide deck.",
+      "The final day required early movement. The Georgetown bus took us to the Capitol Hill campus on July 29, where our team delivered the machine learning presentation at the Massive Data Institute summit. The presentation went smoothly, and we received program shirts afterward.",
+      "Two serious commitments require direct coordination. State your boundaries early, use transit time to study, keep your promises to both teams, and deliver results on every commitment you accept.",
+    ],
+  },
   {
     slug: "biggest-coding-project-didnt-launch",
     date: "June 2026",

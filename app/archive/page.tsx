@@ -21,6 +21,46 @@ const projects: Project[] = [
     dates: "",
     summary:
       "Contributing to a real GitHub project by working through a documented bug or feature request, building the project locally, testing changes, and submitting work through an open-source workflow.",
+    links: [
+      {
+        label: "GitHub",
+        href: "https://github.com/adamressom",
+        external: true,
+      },
+    ],
+  },
+  {
+    name: "PlanGuard",
+    context: "SEO Tech",
+    dates: "Jun - Aug 2026",
+    summary:
+      "A full-stack study planning app with secure authentication, explainable priority scoring, and 62 automated tests.",
+    links: [
+      {
+        label: "GitHub",
+        href: "https://github.com/adamressom/PlanGuard",
+        external: true,
+      },
+    ],
+  },
+  {
+    name: "Glioblastoma Single-Cell Analysis",
+    context: "Georgetown Data Science Corps",
+    dates: "Jun - Aug 2026",
+    summary:
+      "A Python machine learning project analyzing 1.1 million single-cell records to classify glioblastoma data and uncover patterns.",
+    links: [
+      {
+        label: "GitHub · clustering",
+        href: "https://github.com/adamressom/Glioblastoma-introduction-to-clustering",
+        external: true,
+      },
+      {
+        label: "GitHub · data analysis",
+        href: "https://github.com/adamressom/glioblastoma-data-",
+        external: true,
+      },
+    ],
   },
   {
     name: "Debugging Automation Toolkit",

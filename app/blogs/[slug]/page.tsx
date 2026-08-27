@@ -81,8 +81,21 @@ export default async function BlogPostPage({
 
         <div className="mt-8 rounded-[24px] border border-[#d4ded2] bg-[#fbfaf3]/75 p-5 sm:p-7">
           <div className="space-y-5 text-sm leading-7 text-[#4f5b53]">
-            {post.body.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
+            {post.body.map((paragraph, index) => (
+              <div key={paragraph}>
+                <p>{paragraph}</p>
+                {post.inlineImages
+                  ?.filter((image) => image.afterParagraph === index)
+                  .map((image) => (
+                    <div key={image.src} className="mt-5">
+                      <BlogImageLightbox
+                        src={image.src}
+                        alt={image.alt}
+                        orientation={image.orientation}
+                      />
+                    </div>
+                  ))}
+              </div>
             ))}
             {post.image && (
               <BlogImageLightbox

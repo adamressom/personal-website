@@ -3,7 +3,7 @@ import { featuredWork } from "@/lib/work";
 
 const current = [
   ["studying", "CS @ Michigan. Software and web systems."],
-  ["building", "Apps with auth, data, and clear flows."],
+  ["building", "Websites with auth, data, and clear flows."],
   ["looking for", "Summer 2027 internships where I can learn and ship."],
 ];
 
@@ -70,12 +70,19 @@ export default function Home() {
         <div className="space-y-3">
           {featuredWork.map((item) => (
             <article
-              key={`${item.organization}-${item.role}`}
+              key={`${item.organization}-${item.role}-${item.dates}`}
               className="rounded-2xl border border-[#d4ded2] bg-[#fbfaf3]/70 p-4"
             >
               <div className="flex flex-wrap items-baseline justify-between gap-2">
                 <h3 className="text-sm font-semibold">{item.organization}</h3>
-                <p className="mono-font text-[10px] text-[#667069]">{item.dates}</p>
+                <div className="flex flex-wrap items-center justify-end gap-2">
+                  {item.note && (
+                    <span className="mono-font rounded-full bg-[#dceaf2] px-2 py-1 text-[9px] uppercase tracking-[0.08em] text-[#386f8f]">
+                      {item.note}
+                    </span>
+                  )}
+                  <p className="mono-font text-[10px] text-[#667069]">{item.dates}</p>
+                </div>
               </div>
               <p className="mt-2 text-xs font-medium text-[#20221f]">{item.role}</p>
               {item.location && (
@@ -109,11 +116,11 @@ export default function Home() {
           </p>
           <p>
             Graduating in three and a half years. Interned at Georgetown
-            Lombardi Cancer Center doing metabolomics data analysis, then at
-            OmicsCraft building AI-powered research platforms. Spent summers
-            sharpening my full-stack skills through SEO&apos;s engineering
-            program, building everything from Python games to FIFA match
-            analytics with machine learning.
+            Data Science Corps building machine learning pipelines for
+            single-cell datasets, and at OmicsCraft testing bioinformatics
+            tooling. Spent summers sharpening my full-stack skills through
+            SEO&apos;s engineering program, most recently building PlanGuard with
+            Flask, REST APIs, secure auth, and automated tests.
           </p>
           <p>
             Active in ColorStack, NSBE, and MLT on campus. I don&apos;t know what

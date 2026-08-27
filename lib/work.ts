@@ -4,28 +4,49 @@ export type WorkItem = {
   location?: string;
   dates: string;
   summary: string;
+  note?: string;
 };
 
 export const featuredWork: WorkItem[] = [
   {
     role: "Software Engineering Intern",
     organization: "SEO Tech",
-    location: "New York, NY",
-    dates: "Feb 2025 to Aug 2025, returning Summer 2026",
+    location: "Remote",
+    dates: "Jun 2026 to Aug 2026",
+    note: "returning summer 2026",
     summary:
-      "Prototyped interactive systems, debug tooling, and release-ready UI flows across Agile sprints.",
+      "Built PlanGuard, a full-stack study planning app with Flask, SQLAlchemy, REST APIs, secure auth, priority scoring, and 62 automated tests.",
+  },
+  {
+    role: "Data Science Research Intern",
+    organization: "Georgetown Data Science Corps",
+    location: "Washington, DC",
+    dates: "Jun 2026 to Aug 2026",
+    summary:
+      "Built and evaluated machine learning pipelines on 1.1M+ single-cell records, improving multiclass classification with ensemble methods.",
+  },
+  {
+    role: "Software Engineering Intern",
+    organization: "SEO Tech",
+    location: "New York, NY",
+    dates: "Feb 2025 to Aug 2025",
+    summary:
+      "Built technical projects through Agile sprints, tested features with teammates, and improved debugging, documentation, and delivery practices.",
   },
   {
     role: "Data Science Intern",
-    organization: "Georgetown University",
+    organization: "Lombardi Comprehensive Cancer Center",
+    location: "Washington, DC",
     dates: "Jun 2023 to Aug 2023",
-    summary: "Cut metabolomics processing time by 50%. Found 2 potential biomarkers.",
+    summary:
+      "Analyzed metabolomics data with METLIN and XCMS, reducing processing time by 50%, improving accuracy, and identifying 2 potential biomarkers. Presented weekly findings to Dr. Cheema and the research team to improve experimental protocols and lab efficiency.",
   },
   {
     role: "AI and Software Engineering Intern",
     organization: "OmicsCraft LLC",
     dates: "Jun 2022 to Aug 2022",
-    summary: "Tested 3 bioinformatics toolkits. Found 2 critical bugs.",
+    summary:
+      "Contributed to AI-powered bioinformatics platforms supporting metabolomics and multi-omics analysis. Tested 3 toolkits, identified 2 critical bugs, and evaluated usability to inform redesigns for 2 platform features.",
   },
 ];
 
@@ -33,10 +54,18 @@ export const allWork: WorkItem[] = [
   {
     role: "Software Engineering Intern",
     organization: "SEO Tech",
-    location: "New York, NY",
-    dates: "Incoming, Summer 2026",
+    location: "Remote",
+    dates: "Jun 2026 to Aug 2026",
     summary:
-      "Returning for another summer to build technical projects, collaborate with engineering mentors, and ship production-minded work.",
+      "Built PlanGuard, a full-stack study planning application using Python, Flask, SQLAlchemy, JavaScript, and SQLite.",
+  },
+  {
+    role: "Data Science Research Intern",
+    organization: "Georgetown Data Science Corps",
+    location: "Washington, DC",
+    dates: "Jun 2026 to Aug 2026",
+    summary:
+      "Built and evaluated machine learning models on 1.1M+ single-cell records, optimized supervised classification pipelines, and used dimensionality reduction and clustering to find dataset patterns.",
   },
   {
     role: "Software Engineering Intern",
@@ -72,14 +101,17 @@ export const allWork: WorkItem[] = [
   },
   {
     role: "Data Science Intern",
-    organization: "Georgetown University",
+    organization: "Lombardi Comprehensive Cancer Center",
+    location: "Washington, DC",
     dates: "Jun 2023 to Aug 2023",
-    summary: "Cut metabolomics processing time by 50%. Found 2 potential biomarkers.",
+    summary:
+      "Analyzed metabolomics data with METLIN and XCMS, reducing processing time by 50%, improving accuracy, and identifying 2 potential biomarkers. Presented weekly findings to Dr. Cheema and the research team to improve experimental protocols and lab efficiency.",
   },
   {
     role: "AI and Software Engineering Intern",
     organization: "OmicsCraft LLC",
     dates: "Jun 2022 to Aug 2022",
-    summary: "Tested 3 bioinformatics toolkits. Found 2 critical bugs.",
+    summary:
+      "Contributed to AI-powered bioinformatics platforms supporting metabolomics and multi-omics analysis. Tested 3 toolkits, identified 2 critical bugs, and evaluated usability to inform redesigns for 2 platform features.",
   },
 ];
